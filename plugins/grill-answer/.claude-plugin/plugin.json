@@ -2,9 +2,18 @@
   "name": "grill-answer",
   "version": "0.1.0",
   "description": "Painel para responder as rodadas de perguntas da skill grilling/grill-me",
-  "author": { "name": "Karlo Guidoni", "url": "https://github.com/kguidonimartins" },
+  "author": {
+    "name": "Karlo Guidoni",
+    "url": "https://github.com/kguidonimartins"
+  },
   "homepage": "https://github.com/kguidonimartins/claude-mods/tree/main/plugins/grill-answer",
   "repository": "https://github.com/kguidonimartins/claude-mods",
-  "keywords": ["mod", "grilling", "grill-me", "pane"],
+  "license": "MIT",
+  "keywords": [
+    "mod",
+    "grilling",
+    "grill-me",
+    "pane"
+  ],
   "types": "./types/index.d.ts"
 }

@@ -1,19 +1,19 @@
 # claude-mods
 
-Marketplace de [mods do Claude Code](https://code.claude.com/docs/en/plugins/mods/overview):
-plugins de *function hooks* que rodam dentro do Claude Code (painéis, comandos, regras de
-tool call). Requer Claude Code v2.1.287 ou mais novo.
+A marketplace of [Claude Code mods](https://code.claude.com/docs/en/plugins/mods/overview):
+plugins of function hooks that run inside Claude Code (panes, commands, tool call rules).
+Requires Claude Code v2.1.287 or later.
 
-## Instalar
+## Install
 
 ```sh
 claude plugin marketplace add kguidonimartins/claude-mods
 claude plugin install grill-answer@claude-mods
 ```
 
-Numa sessão aberta, rode `/reload-plugins` para carregar sem reiniciar.
+In a session that is already open, run `/reload-plugins` to load it without restarting.
 
-Um mod roda com as suas permissões. Para ver o que ele faz antes de instalar:
+A mod runs with your permissions. To see what one does before you install it:
 
 ```sh
 claude plugin validate plugins/grill-answer
@@ -21,6 +21,10 @@ claude plugin validate plugins/grill-answer
 
 ## Mods
 
-| Mod | O que faz |
+| Mod | What it does |
 |---|---|
-| [`grill-answer`](plugins/grill-answer) | Painel para responder as rodadas de perguntas da skill `grilling` / `grill-me` |
+| [`grill-answer`](plugins/grill-answer) | A pane for answering the question rounds of the `grilling` / `grill-me` skill |
+
+## License
+
+[MIT](LICENSE)
