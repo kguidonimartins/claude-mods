@@ -9,10 +9,8 @@ prompt:
 ```
 **Q1** - <title>: <your answer>
 
-**Q2** - <title>: aceito a recomendação
+**Q2** - <title>: I accept the recommendation
 ```
-
-The pane's text is in Portuguese.
 
 ## Recognized format
 
@@ -35,7 +33,7 @@ Only the main conversation is read, never a subagent's. A reply without this for
 | `Tab` / arrows | walk between fields and buttons |
 | `1`–`9` | accepts question N's recommendation (with the focus on a button) |
 | `a` | accepts the recommendation of every pending question |
-| `e` | sends the answers |
+| `s` | sends the answers |
 | `Esc` | hands the keyboard back to the prompt |
 | `/grill-answer` | reopens the pane for the last round |
 

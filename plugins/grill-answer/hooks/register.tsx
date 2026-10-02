@@ -5,18 +5,18 @@ import type { GrillRound } from '../types'
 import { composeAnswers, parseRound } from './parse'
 
 const PANE = 'grill-answer'
-const ACCEPT = 'aceito a recomendação'
+const ACCEPT = 'I accept the recommendation'
 
 const round = atom({ plugin: 'grill-answer', key: 'round' } as const, null)
 const answers = atom({ plugin: 'grill-answer', key: 'answers' } as const, {})
 
-// Rascunho do que foi digitado sem Enter: não redesenha a cada tecla.
+// Drafts typed without Enter: kept here so a keystroke does not redraw.
 const drafts = new Map<number, string>()
 
 function openPane($: EngineInterface, questions: number) {
   return $.ui.open({
     id: PANE,
-    title: `Grill: ${questions} pergunta(s)`,
+    title: `Grill: ${questions} question(s)`,
     focus: true,
     rows: Math.min(40, 6 + questions * 6),
   })
@@ -26,7 +26,7 @@ function setAnswer($: EngineInterface, n: number, text: string) {
   return update($, answers, all => ({ ...all, [n]: text }))
 }
 
-// Depois do Enter, leva o cursor ao próximo campo pendente (ou ao "enviar").
+// After Enter, moves the cursor to the next pending field (or to "send").
 async function focusNext(
   $: EngineInterface,
   current: GrillRound,
@@ -41,9 +41,9 @@ async function focusNext(
   const key = next === undefined ? 'send' : `answer-${next.n}`
   try {
     const moved = await $.ui.focus({ requestId: PANE, key })
-    if (moved.deny !== undefined) $.ui.log(`grill-answer: foco não moveu (${moved.deny})`)
+    if (moved.deny !== undefined) $.ui.log(`grill-answer: focus did not move (${moved.deny})`)
   } catch (error) {
-    $.ui.log(`grill-answer: foco não moveu (${String(error)})`)
+    $.ui.log(`grill-answer: focus did not move (${String(error)})`)
   }
 }
 
@@ -68,7 +68,7 @@ export const register: Register = on => {
   on('session.start', async ($, e, next) => {
     await $.command.register({
       name: 'grill-answer',
-      description: 'Abre o painel para responder a última rodada do grilling',
+      description: 'Open the pane to answer the last grilling round',
     })
 
     return next(e)
@@ -77,12 +77,12 @@ export const register: Register = on => {
   on('command.run', { command: 'grill-answer' }, async $ => {
     const current = await read($, round)
     if (current === null) {
-      return { text: 'Nenhuma rodada do grilling pendente.' }
+      return { text: 'No grilling round pending.' }
     }
 
     await openPane($, current.questions.length)
 
-    return { text: 'Painel do grilling aberto.' }
+    return { text: 'Grilling pane opened.' }
   })
 
   on('turn.complete', async ($, e, next) => {
@@ -93,11 +93,11 @@ export const register: Register = on => {
       drafts.clear()
       await update($, round, () => ({ id: e.turnId, questions }))
       await update($, answers, () => ({}))
-      $.ui.status(`grill: ${questions.length} pergunta(s) — /grill-answer`)
+      $.ui.status(`grill: ${questions.length} question(s) — /grill-answer`)
 
       const opened = await openPane($, questions.length)
       if (!opened.isPlaced) {
-        $.ui.toast('grill: /grill-answer para responder as perguntas')
+        $.ui.toast('grill: /grill-answer to answer the questions')
       }
     }
 
@@ -107,13 +107,13 @@ export const register: Register = on => {
   on('ui.render', { component: 'Pane', requestId: PANE }, async ($, e) => {
     const elements = $.ui.resolve(e)
     const { Box, Text, Button, Markdown } = elements
-    // mobile não tem Input: lá só dá para aceitar a recomendação.
+    // mobile has no Input: there only the recommendation can be accepted.
     const Input = 'Input' in elements ? elements.Input : undefined
     const current = await read($, round)
     const given = await read($, answers)
 
     if (current === null) {
-      return <Text dimColor>Nenhuma rodada do grilling pendente.</Text>
+      return <Text dimColor>No grilling round pending.</Text>
     }
 
     const pending = current.questions.filter(q => !given[q.n]?.trim())
@@ -122,7 +122,7 @@ export const register: Register = on => {
       <Box flexDirection="column" gap={1}>
         {!e.props.isFocused && (
           <Text color="yellow">
-            Painel sem o teclado: ctrl+x tab (ou clique) para responder.
+            Pane has no keyboard: ctrl+x tab (or click) to answer.
           </Text>
         )}
         {current.questions.map(q => {
@@ -144,9 +144,9 @@ export const register: Register = on => {
                   <Box flexGrow={1}>
                     <Input
                       key={`answer-${q.n}`}
-                      label="resposta: "
-                      placeholder="digite e Enter para gravar"
-                      submitLabel="gravar"
+                      label="answer: "
+                      placeholder="type, then Enter to save"
+                      submitLabel="save"
                       autoFocus={q === pending[0] ? true : undefined}
                       value={answer ?? drafts.get(q.n) ?? ''}
                       onInput={(value: string) => drafts.set(q.n, value)}
@@ -159,7 +159,7 @@ export const register: Register = on => {
                 )}
                 <Button
                   key={`accept-${q.n}`}
-                  label="aceitar"
+                  label="accept"
                   hotkey={q.n < 10 ? String(q.n) : undefined}
                   dimColor={answer === ACCEPT}
                   onPress={() => setAnswer($, q.n, ACCEPT)}
@@ -174,7 +174,7 @@ export const register: Register = on => {
         <Box flexDirection="row" gap={1}>
           <Button
             key="accept-all"
-            label={`aceitar pendentes (${pending.length})`}
+            label={`accept pending (${pending.length})`}
             hotkey="a"
             onPress={() =>
               update($, answers, all => {
@@ -190,14 +190,14 @@ export const register: Register = on => {
           />
           <Button
             key="send"
-            label="enviar respostas"
+            label="send answers"
             variant="primary"
-            hotkey="e"
+            hotkey="s"
             onPress={() => send($, current)}
           />
           <Button
             key="dismiss"
-            label="fechar"
+            label="close"
             role="dismiss"
             onPress={() => $.ui.close({ id: PANE })}
           />

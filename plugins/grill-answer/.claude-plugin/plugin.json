@@ -1,7 +1,7 @@
 {
   "name": "grill-answer",
-  "version": "0.1.0",
-  "description": "Painel para responder as rodadas de perguntas da skill grilling/grill-me",
+  "version": "0.2.0",
+  "description": "A pane for answering the question rounds of the grilling / grill-me skill",
   "author": {
     "name": "Karlo Guidoni",
     "url": "https://github.com/kguidonimartins"

@@ -1,12 +1,15 @@
 {
   "name": "claude-mods",
-  "description": "Mods do Claude Code de Karlo Guidoni",
-  "owner": { "name": "Karlo Guidoni", "url": "https://github.com/kguidonimartins" },
+  "description": "Karlo Guidoni's Claude Code mods",
+  "owner": {
+    "name": "Karlo Guidoni",
+    "url": "https://github.com/kguidonimartins"
+  },
   "plugins": [
     {
       "name": "grill-answer",
       "source": "./plugins/grill-answer",
-      "description": "Painel para responder as rodadas de perguntas da skill grilling/grill-me"
+      "description": "A pane for answering the question rounds of the grilling / grill-me skill"
     }
   ]
 }

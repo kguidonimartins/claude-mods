@@ -1,9 +1,9 @@
 import type { GrillQuestion } from '../types'
 
-// Uma rodada da skill grilling:
-//   ❓ **Q1** - **<título>**: <corpo>
+// One round of the grilling skill:
+//   ❓ **Q1** - **<title>**: <body>
 //
-//   ➡️ <recomendação>
+//   ➡️ <recommendation>
 //
 //   ---
 const HEAD = /^\*\*Q(\d+)\*\*\s*[-–—:]\s*\*\*(.+?)\*\*\s*:?\s*/
@@ -33,7 +33,7 @@ export const parseRound = (answer: string): GrillQuestion[] => {
   return questions
 }
 
-// Corta o separador `---` e o que vier depois da última pergunta.
+// Cuts the `---` separator and whatever follows the last question.
 const tidy = (text: string) => text.split(/^\s*---\s*$/m)[0]!.trim()
 
 export const composeAnswers = (
@@ -45,7 +45,7 @@ export const composeAnswers = (
 
     return answer
       ? `**Q${q.n}** - ${q.title}: ${answer}`
-      : `**Q${q.n}** - ${q.title}: (sem resposta por enquanto)`
+      : `**Q${q.n}** - ${q.title}: (no answer yet)`
   })
 
   return lines.join('\n\n')

@@ -2,17 +2,17 @@ import { expect, test } from 'claude-code/testing'
 
 import { parseRound } from '../hooks/parse'
 
-const ROUND = `Vamos à primeira rodada.
+const ROUND = `Here is the first round.
 
-❓ **Q1** - **Onde o mod vive**: No repo de dotfiles ou só em ~/.claude?
+❓ **Q1** - **Where the mod lives**: In the dotfiles repo or only in ~/.claude?
 
-Opções: (a) repo, (b) local.
+Options: (a) repo, (b) local.
 
-➡️ (a) repo, versionado com stow.
+➡️ (a) repo, versioned with stow.
 
 ---
 
-❓ **Q2** - **Atalho**: Qual comando abre o painel?
+❓ **Q2** - **Shortcut**: Which command opens the pane?
 
 ➡️ \`/grill-answer\`
 `
@@ -26,18 +26,18 @@ const PANE_PROPS = {
   view: {},
 } as const
 
-test('lê as perguntas e recomendações de uma rodada', () => {
+test('reads the questions and recommendations of a round', () => {
   const questions = parseRound(ROUND)
 
   expect(questions.length).toBe(2)
-  expect(questions[0]?.title).toBe('Onde o mod vive')
-  expect(questions[0]?.body).toContain('Opções')
-  expect(questions[0]?.recommendation).toBe('(a) repo, versionado com stow.')
+  expect(questions[0]?.title).toBe('Where the mod lives')
+  expect(questions[0]?.body).toContain('Options')
+  expect(questions[0]?.recommendation).toBe('(a) repo, versioned with stow.')
   expect(questions[1]?.recommendation).toBe('`/grill-answer`')
-  expect(parseRound('resposta comum, sem perguntas').length).toBe(0)
+  expect(parseRound('a plain reply, no questions').length).toBe(0)
 })
 
-test('responde a rodada pelo painel e envia como prompt', async ($, on) => {
+test('answers the round in the pane and sends it as a prompt', async ($, on) => {
   const sent: string[] = []
   on('ui.open', () => ({ value: { isPlaced: true } }))
   on('ui.close', () => ({ value: undefined }))
@@ -76,14 +76,14 @@ test('responde a rodada pelo painel e envia como prompt', async ($, on) => {
       props: PANE_PROPS,
     })
 
-    expect(await ui.find({ text: /Onde o mod vive/ })).toBeDefined()
+    expect(await ui.find({ text: /Where the mod lives/ })).toBeDefined()
     await ui.press({ key: 'accept-1' })
-    await ui.input({ key: 'answer-2', text: 'prefiro /grill' })
+    await ui.input({ key: 'answer-2', text: 'I prefer /grill' })
     await ui.press({ key: 'send' })
 
     expect(sent.length).toBe(1)
-    expect(sent[0]).toContain('**Q1** - Onde o mod vive: aceito a recomendação')
-    expect(sent[0]).toContain('**Q2** - Atalho: prefiro /grill')
+    expect(sent[0]).toContain('**Q1** - Where the mod lives: I accept the recommendation')
+    expect(sent[0]).toContain('**Q2** - Shortcut: I prefer /grill')
     await ui.unmount()
   }
 })
